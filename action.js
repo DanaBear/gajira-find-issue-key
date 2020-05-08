@@ -25,8 +25,8 @@ module.exports = class {
   }
 
   async execute () {
-    console.log("this.argv.from  " + this.argv.from)
-    console.log("this.argv._.join(' ')  " + this.argv._.join(' '))
+   // console.log("this.argv.from  " + this.argv.from)
+  //  console.log("this.argv._.join(' ')  " + this.argv._.join(' '))
     const template = eventTemplates[this.argv.from] || this.argv._.join(' ')
     console.log("template " + template)
     const extractString = this.preprocessString(template)
