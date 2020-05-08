@@ -12,7 +12,6 @@ const config = YAML.parse(fs.readFileSync(configPath, 'utf8'))
 
 async function exec () {
   try {
-    console.log("githubEvent " + githubEvent)
     const result = await new Action({
       githubEvent,
       argv: parseArgs(),
@@ -43,9 +42,6 @@ async function exec () {
 }
 
 function parseArgs () {
-  console.log("event " + core.getInput('event') || config.event)
-  console.log("string " + core.getInput('string') || config.string)
-  console.log("from " + core.getInput('from'))
   return {
     event: core.getInput('event') || config.event,
     string: core.getInput('string') || config.string,

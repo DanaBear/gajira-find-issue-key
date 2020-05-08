@@ -102,7 +102,6 @@ const config = YAML.parse(fs.readFileSync(configPath, 'utf8'))
 
 async function exec () {
   try {
-    console.log("githubEvent " + githubEvent)
     const result = await new Action({
       githubEvent,
       argv: parseArgs(),
@@ -133,9 +132,6 @@ async function exec () {
 }
 
 function parseArgs () {
-  console.log("event " + core.getInput('event') || false)
-  console.log("string " + core.getInput('string') || false)
-  console.log("from " + core.getInput('from'))
   return {
     event: core.getInput('event') || config.event,
     string: core.getInput('string') || config.string,
@@ -170,22 +166,14 @@ module.exports = class {
     })
 
     this.config = config
-    console.log("config " + this.config)
     this.argv = argv
-    console.log("argv " + this.argv)
     this.githubEvent = githubEvent
-    console.log("githubEvent " + this.githubEvent)
   }
 
   async execute () {
-    console.log("this.argv.from  " + this.argv.from)
-    console.log("this.argv._.join(' ')  " + this.argv._.join(' '))
     const template = eventTemplates[this.argv.from] || this.argv._.join(' ')
-    console.log("template " + template)
     const extractString = this.preprocessString(template)
-    console.log("extractString " + extractString)
     const match = extractString.match(issueIdRegEx)
-    console.log("match " + match)
 
     if (!match) {
       console.log(`String "${extractString}" does not contain issueKeys`)
@@ -195,8 +183,7 @@ module.exports = class {
 
     for (const issueKey of match) {
       const issue = await this.Jira.getIssue(issueKey)
-      console.log("issue " + issue)
-      
+
       if (issue) {
         return { issue: issue.key }
       }
@@ -206,8 +193,7 @@ module.exports = class {
   preprocessString (str) {
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
     const tmpl = _.template(str)
-    console.log("tmpl inside " + tmpl)
-    console.log("githubEvent inside " + this.githubEvent)  
+
     return tmpl({ event: this.githubEvent })
   }
 }
